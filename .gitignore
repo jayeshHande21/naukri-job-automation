@@ -1,4 +1,5 @@
 # Folders to ignore
+.venv/
 __pycache__/
 close-applied-tabs/
 dynamic form handler/
