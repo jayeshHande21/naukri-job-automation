@@ -19,7 +19,6 @@ OneClickShell is designed to streamline the job application process by:
 - **AI-Powered Auto-Application**: Integrates with Ollama for intelligent form filling
 - **Caching System**: Maintains QA cache and master QA data for consistent responses
 - **HTML Reports**: Generates beautiful, interactive reports of job data and matches
-- **Multi-user Support**: Support for multiple user profiles and configurations
 
 ## Installation
 
@@ -64,27 +63,21 @@ OneClickShell is designed to streamline the job application process by:
 
 ```
 oneClickShell/
-├── main.py                         # Main entry point
-├── helpers.py                      # Web scraping and page navigation utilities
-├── score.py                        # Job scoring and resume embedding logic
-├── resume_parser.py                # Resume parsing and profile management
-├── report.py                       # HTML report generation
+├── core/                           # Crawl, score, report, auto-apply
+│   ├── main.py
+│   ├── helpers.py / score.py / report.py / ...
+│   └── auto_apply/auto_apply_new.py
 │
-├── config.json                     # Main configuration file
-├── requirements.txt                # Python dependencies
-├── run_my_script.bat               # Windows batch runner
-│
-├── AutoApply/                      # Auto-application module
-│   ├── auto_apply_new.py           # Intelligent form filling and auto-apply logic
-│   ├── qa_cache.json               # Cached Q&A responses
-│   └── master_qa.json              # Master Q&A database
+├── profiles/jayesh/                # Single-user profile (Jayesh only)
+│   ├── config_A.json
+│   ├── links.txt
+│   ├── resume_profile.json
+│   ├── applied_jobs.json / qa_store.json / job_cache.json
+│   └── failed_applications.json
 │
 ├── outputs/                        # Generated reports and job data
-│   └── run_YYYYMMDD_HHMMSS/
-│       ├── job_data_*.json         # Crawled job listings
-│       └── job_crawl_summary_*.html # HTML reports
-│
-└── resume_transformers/            # Virtual environment (created on first run)
+├── requirements.txt
+└── run_my_script.bat
 ```
 
 ## Dependencies

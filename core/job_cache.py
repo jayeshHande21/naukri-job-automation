@@ -16,7 +16,7 @@ class JobScrapeCache:
     - Thread-safe: single RLock guards all reads and writes.
     - TTL: entries older than TTL_DAYS days are pruned on init.
     - Storage: <profile_dir>/<cache_filename>
-      e.g. profiles/pandurang/job_cache_B.json
+      e.g. profiles/jayesh/job_cache.json
 
     Entry format:
         {

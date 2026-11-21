@@ -47,8 +47,7 @@ timestamp     = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 output_folder = os.path.join(base_dir, "outputs", f"run_{timestamp}")
 os.makedirs(output_folder, exist_ok=True)
 
-run        = "A"
-AUTO_APPLY = True
+AUTO_APPLY = False   # apply to scored Pune frontend jobs
 FREELANCE  = False   # True → detect & filter freelance jobs, score with FreelanceScorer
 RERANKER   = True    # True → cross-encoder reranks top-60 jobs_to_apply before applying
 NEBIUS     = True    # True → use Nebius cloud LLM instead of local Ollama
@@ -62,31 +61,14 @@ except Exception:
     NEBIUS_API_KEY = None
     NEBIUS = False
 
-# ── Per-run profile resolution ────────────────────────────────────────────
-if run == "A":
-    profile_dir         = os.path.join(base_dir, "profiles", "pandurang")
-    cache_file          = "job_cache_A.json"
-    config_path         = os.path.join(profile_dir, "config_A.json")
-    links_path          = os.path.join(profile_dir, "links.txt")
-    resume_profile_path = os.path.join(profile_dir, "resume_profile_pandurang.json")
-    new_filename        = f"job_crawl_summary_A_{timestamp}.html"
-    log_file            = os.path.join(output_folder, f"output_A_{timestamp}.log")
-elif run == "B":
-    profile_dir         = os.path.join(base_dir, "profiles", "pandurang")
-    cache_file          = "job_cache_B.json"
-    config_path         = os.path.join(profile_dir, "config_B.json")
-    links_path          = os.path.join(profile_dir, "links.txt")
-    resume_profile_path = os.path.join(profile_dir, "resume_profile_pandurang.json")
-    new_filename        = f"job_crawl_summary_B_{timestamp}.html"
-    log_file            = os.path.join(output_folder, f"output_B_{timestamp}.log")
-else:  
-    profile_dir         = os.path.join(base_dir, "profiles", "mayuri")
-    cache_file          = "job_cache.json"
-    config_path         = os.path.join(profile_dir, "config.json")
-    links_path          = os.path.join(profile_dir, "links.txt")
-    resume_profile_path = os.path.join(profile_dir, "resume_profile_mayuri.json")
-    new_filename        = f"job_crawl_summary_M_{timestamp}.html"
-    log_file            = os.path.join(output_folder, f"output_M_{timestamp}.log")
+# ── Jayesh profile (single-user) ──────────────────────────────────────────
+profile_dir         = os.path.join(base_dir, "profiles", "jayesh")
+cache_file          = "job_cache.json"
+config_path         = os.path.join(profile_dir, "config_A.json")
+links_path          = os.path.join(profile_dir, "links.txt")
+resume_profile_path = os.path.join(profile_dir, "resume_profile.json")
+new_filename        = f"job_crawl_summary_J_{timestamp}.html"
+log_file            = os.path.join(output_folder, f"output_J_{timestamp}.log")
 
 
 
@@ -248,7 +230,7 @@ if len(drivers) == 0:
 # Link collection
 # ─────────────────────────────────────────────────────────
 
-job_links_xpath = "/html/body/div/div/main/div[1]/div[2]/div[2]/div/div/div/div[1]/h2/a"
+job_links_xpath = "//h2/a[contains(@class,'title')]"
 
 with open(links_path, "r") as f:
     lk = ast.literal_eval(f.read())
@@ -562,10 +544,8 @@ if AUTO_APPLY and apply_driver:
         set_active_profile, set_llm_backend,
     )
 
-    # ── Sync auto_apply profile to main.py run ──────────────────────────
-    _profile_key_map = {"A": "A_NEW", "B": "B_OLD", "M": "C_MAYURI"}
-    set_active_profile(_profile_key_map.get(run, "C_MAYURI"))
-    logger.info(f"Auto-apply profile set to: {_profile_key_map.get(run)}")
+    set_active_profile("J_JAYESH")
+    logger.info("Auto-apply profile set to: J_JAYESH")
 
     # ── LLM backend: Nebius if key present, else Ollama ─────────────────
     set_llm_backend(use_nebius=NEBIUS, api_key=NEBIUS_API_KEY)

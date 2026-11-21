@@ -54,51 +54,30 @@ def _p(profile: str, filename: str) -> str:
     return os.path.join(BASE_DIR, "profiles", profile, filename)
 
 CONFIGS = {
-    "A_NEW": {
-        "APPLIED_LOG": _p("pandurang", "applied_jobs.json"),
-        "QA_MASTER":   _p("pandurang", "master_qa.json"),
-        "QA_CACHE":    _p("pandurang", "qa_cache.json"),
-        "CONFIG":      _p("pandurang", "config_A.json"),
-        "FAILED_LOG":  _p("pandurang", "failed_applications.json"),
-    },
-    "B_OLD": {
-        "APPLIED_LOG": _p("pandurang", "applied_jobs.json"),   # shared with A
-        "QA_MASTER":   _p("pandurang", "master_qa.json"),      # shared with A
-        "QA_CACHE":    _p("pandurang", "qa_cache.json"),       # shared with A
-        "CONFIG":      _p("pandurang", "config_B.json"),
-        "FAILED_LOG":  _p("pandurang", "failed_applications.json"),
-    },
-    "C_MAYURI": {
-        "APPLIED_LOG": _p("mayuri", "applied_jobs.json"),
-        "QA_MASTER":   _p("mayuri", "master_qa.json"),
-        "QA_CACHE":    _p("mayuri", "qa_cache.json"),
-        "CONFIG":      _p("mayuri", "config.json"),
-        "FAILED_LOG":  _p("mayuri", "failed_applications.json"),
+    "J_JAYESH": {
+        "APPLIED_LOG": _p("jayesh", "applied_jobs.json"),
+        "QA_MASTER":   _p("jayesh", "master_qa.json"),
+        "QA_CACHE":    _p("jayesh", "qa_cache.json"),
+        "CONFIG":      _p("jayesh", "config_A.json"),
+        "FAILED_LOG":  _p("jayesh", "failed_applications.json"),
     },
 }
 
-ACTIVE_PROFILE = "C_MAYURI"   # ← change to switch profile
+ACTIVE_PROFILE = "J_JAYESH"
 PROFILE        = CONFIGS[ACTIVE_PROFILE]
-FAILED_LOG     = PROFILE["FAILED_LOG"]   # ← now derived from active profile
+FAILED_LOG     = PROFILE["FAILED_LOG"]
 URLS_JSON      = os.path.join(BASE_DIR, "outputs", "latest_job_data.json")  # update as needed
 
 
-def set_active_profile(profile_key: str):
-    """
-    Switch the active profile at runtime. Call this from main.py
-    right after importing, before using AppliedCache or FailedLogger.
-
-    Usage:
-        from auto_apply.auto_apply_new import set_active_profile
-        set_active_profile("B_OLD")   # or "A_NEW" / "C_MAYURI"
-    """
+def set_active_profile(profile_key: str = "J_JAYESH"):
+    """Bind auto-apply paths to the Jayesh profile (only profile supported)."""
     global ACTIVE_PROFILE, PROFILE, FAILED_LOG
     if profile_key not in CONFIGS:
         raise ValueError(f"Unknown profile key '{profile_key}'. Valid: {list(CONFIGS.keys())}")
     ACTIVE_PROFILE = profile_key
     PROFILE        = CONFIGS[ACTIVE_PROFILE]
     FAILED_LOG     = PROFILE["FAILED_LOG"]
-OLLAMA_MODEL    = "qwen2.5:7b"
+OLLAMA_MODEL    = "llama3.1:8b"
 NEBIUS_URL      = "https://api.tokenfactory.nebius.com/v1/chat/completions"
 NEBIUS_MODEL    = "meta-llama/Meta-Llama-3.1-8B-Instruct"
 _USE_NEBIUS     = False   # set by set_llm_backend()
